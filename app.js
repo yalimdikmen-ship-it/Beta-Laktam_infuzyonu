@@ -203,7 +203,7 @@ function generate(){
   $("warnings").innerHTML="<ul>"+warnings.map(x=>`<li>${x}</li>`).join("")+"</ul>";
 
   let riskClass="green", riskText="Standart prolonged-infusion değerlendirme yolu.";
-  if(rrt!=="none" || aki || crcl<30){riskClass="red";riskText="Yüksek doğrulama gereksinimi: renal fonksiyon/RRT nedeniyle otomatik idame dozu kullanmayın."}
+  if(rrt!=="none" || aki || (crcl>0 && crcl<30)){riskClass="red";riskText="Yüksek doğrulama gereksinimi: renal fonksiyon/RRT nedeniyle otomatik idame dozu kullanmayın."}
   else if(crcl>=130 || $("arc").checked || mic || shock){riskClass="amber";riskText="PK/PD hedef başarısızlığı riski artabilir; prolonged infusion ve klinik doğrulama önemli."}
   $("riskBanner").innerHTML=`<div class="risk ${riskClass}">${riskText}</div>`;
 
@@ -223,7 +223,46 @@ UYARI:
 
 $("generate").addEventListener("click",generate);
 $("reset").addEventListener("click",()=>location.reload());
-$("printBtn").addEventListener("click",()=>{if(!disclaimerAcceptedAt){alert("PDF için klinik güvenlik uyarısını okuyup kabul etmeniz gerekir.");return}window.print()});
+function fillPrintSheet(){
+  const key=$("drug").value, d=DRUGS[key];
+  const sexMap={male:"Erkek",female:"Kadın"};
+  const rrtMap={none:"Yok",crrt:"CRRT",ihd:"Aralıklı hemodiyaliz",sled:"SLED / PIRRT"};
+  const siteMap={
+    sepsis:"Sepsis / odağı belirsiz",hap:"HAP / VAP",bsi:"Bakteriyemi",
+    iai:"İntraabdominal",uti:"Komplike üriner",cns:"SSS enfeksiyonu",other:"Diğer"
+  };
+  const crcl=+$("crcl").value, eff=+$("effluent").value;
+  const renalRec=renalDoseText(key,crcl,$("rrt").value,eff);
+  $("psDate").textContent=new Date().toLocaleDateString("tr-TR");
+  $("psAcceptTime").textContent=disclaimerAcceptedAt ? disclaimerAcceptedAt.toLocaleString("tr-TR") : "—";
+  $("psAge").textContent=$("age").value || "—";
+  $("psSex").textContent=sexMap[$("sex").value] || "—";
+  $("psWeight").textContent=($("weight").value||"—")+" kg";
+  $("psHeightBmi").textContent=($("height").value||"—")+" cm / BMI "+($("bmi").value||"—");
+  $("psScr").textContent=($("scr").value||"—")+" mg/dL";
+  $("psCrcl").textContent=($("crcl").value||"—")+" mL/dk";
+  $("psRrt").textContent=rrtMap[$("rrt").value] || "—";
+  $("psSite").textContent=siteMap[$("site").value] || "—";
+  $("psOrganism").textContent=$("organism").value || "Bilinmiyor";
+  $("psMic").textContent=$("mic").value ? $("mic").value+" mg/L" : "Bilinmiyor";
+  $("psDrug").textContent=d.name;
+  $("psLoading").textContent=d.loading;
+  $("psMaintenance").textContent=renalRec || d.maintenance;
+  $("psInfusion").textContent=d.infusion;
+  $("psPkpd").textContent=d.pkpd;
+  $("psPrep").textContent=d.prep;
+  $("psWarnings").textContent=d.warnings.slice(0,3).join(" • ");
+  const compat=$("compatResult").innerText.trim();
+  $("psCompat").textContent=compat || "Bu hastaya özgü Y-site değerlendirmesi yapılmadı.";
+}
+$("printBtn").addEventListener("click",()=>{
+  if(!disclaimerAcceptedAt){
+    alert("PDF için klinik güvenlik uyarısını okuyup kabul etmeniz gerekir.");
+    return;
+  }
+  fillPrintSheet();
+  window.print();
+});
 
 $("checkCompat").addEventListener("click",()=>{
   const d=$("compatDrug").value, c=$("coDrug").value;

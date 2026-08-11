@@ -1,4 +1,4 @@
-# β-Laktam ICU PWA — v0.2.0
+# β-Laktam ICU PWA — v0.2.1
 
 Offline çalışabilen erişkin yoğun bakım β-laktam prolonged-infusion karar destek **prototipi**.
 
@@ -33,3 +33,10 @@ Kodda değişiklik yaptıktan sonra `sw.js` içindeki `CACHE` sürümünü örn.
 
 ## v0.2
 Ayrıntılı disclaimer/kabul kaydı; PDF ve hemşire kartı kabul kilidi; el yazısı hasta kimliği ve protokol no alanları; BMI; CRRT effluent alanı; genişletilmiş renal karar mantığı.
+
+
+## v0.2.1
+- “PDF HAZIRLA” düğmesi Y-site uyumluluğu bölümünün hemen altına taşındı.
+- PDF düğmesi daha büyük ve belirgin hale getirildi.
+- Tarayıcı web sayfasını yazdırmak yerine tek A4’e özel protokol baskı sayfası oluşturulur.
+- Normal renal fonksiyonda yanlış “yüksek doğrulama gereksinimi” uyarısı veren koşul düzeltildi.

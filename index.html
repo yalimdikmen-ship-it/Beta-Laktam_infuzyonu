@@ -116,7 +116,7 @@
         <div class="eyebrow">ÖNERİLEN PROTOKOL</div>
         <h2 id="resultTitle"></h2>
       </div>
-      <button id="printBtn" class="secondary" disabled>Yazdır / PDF</button>
+      
     </div>
     <div id="riskBanner"></div>
     <div class="result-grid">
@@ -171,15 +171,111 @@
     <div id="compatResult" class="mini-result"></div>
   </section>
 
+  <section class="pdf-action-card">
+    <div>
+      <div class="pdf-action-title">PDF PROTOKOL ÇIKTISI</div>
+      <div class="pdf-action-sub">Klinik güvenlik onayı sonrası tek sayfalık A4 protokol çıktısı oluşturur.</div>
+    </div>
+    <button id="printBtn" class="pdf-primary" disabled>📄 PDF HAZIRLA</button>
+  </section>
+
   <section class="card compact">
     <h2>Kaynak yaklaşımı ve sürüm</h2>
     <p>
-      Sürüm <strong>0.2.0</strong>. Karar motoru yükleme dozunun geciktirilmemesi, β-laktamlarda zaman-bağımlı
+      Sürüm <strong>0.2.1</strong>. Karar motoru yükleme dozunun geciktirilmemesi, β-laktamlarda zaman-bağımlı
       PK/PD hedefleri ve ağır hastada prolonged infusion yaklaşımı üzerine kuruludur. İlaç stabilitesi ve Y-site
       uyumluluğu ürün, konsantrasyon, dilüent, sıcaklık ve üreticiye bağlı olduğundan yerel eczane veri tabanı ile
       doğrulanmalıdır.
     </p>
   </section>
+
+<section id="printSheet" class="print-sheet">
+  <div class="ps-header">
+    <div>
+      <div class="ps-title">β-LAKTAM İNFÜZYON KARAR DESTEĞİ</div>
+      <div class="ps-subtitle">ERİŞKİN YOĞUN BAKIM – PROTOKOL ÇIKTISI</div>
+    </div>
+    <div class="ps-meta">
+      <div><strong>Sürüm:</strong> v0.2.1</div>
+      <div><strong>Tarih:</strong> <span id="psDate">—</span></div>
+    </div>
+  </div>
+
+  <div class="ps-accept">
+    <strong>✓ KLİNİK GÜVENLİK UYARISI OKUNDU VE KABUL EDİLDİ</strong>
+    <span id="psAcceptTime">—</span>
+  </div>
+
+  <div class="ps-warning">
+    <strong>HEKİM TARAFINDAN KLİNİK OLARAK DOĞRULANMADAN UYGULAMAYA GEÇİLMEZ.</strong>
+    Bu çıktı bir klinik karar destek aracından oluşturulmuştur; nihai ilaç, doz, infüzyon yöntemi ve uygulama kararı hastayı değerlendiren hekime aittir.
+  </div>
+
+  <div class="ps-grid">
+    <div class="ps-box">
+      <h3>1. HASTA / RENAL DURUM</h3>
+      <table>
+        <tr><td>Yaş</td><td id="psAge">—</td></tr>
+        <tr><td>Cinsiyet</td><td id="psSex">—</td></tr>
+        <tr><td>Kilo</td><td id="psWeight">—</td></tr>
+        <tr><td>Boy / BMI</td><td id="psHeightBmi">—</td></tr>
+        <tr><td>Kreatinin</td><td id="psScr">—</td></tr>
+        <tr><td>CrCl</td><td id="psCrcl">—</td></tr>
+        <tr><td>Renal yöntem</td><td id="psRrt">—</td></tr>
+      </table>
+    </div>
+
+    <div class="ps-box">
+      <h3>2. ENFEKSİYON / ANTİBİYOTİK</h3>
+      <table>
+        <tr><td>Odağı</td><td id="psSite">—</td></tr>
+        <tr><td>Etken</td><td id="psOrganism">—</td></tr>
+        <tr><td>MIC</td><td id="psMic">—</td></tr>
+        <tr><td>Antibiyotik</td><td id="psDrug">—</td></tr>
+      </table>
+    </div>
+
+    <div class="ps-box ps-span">
+      <h3>3. ÖNERİLEN PROTOKOL</h3>
+      <table>
+        <tr><td>Yükleme / ilk doz</td><td id="psLoading">—</td></tr>
+        <tr><td>İdame</td><td id="psMaintenance">—</td></tr>
+        <tr><td>İnfüzyon süresi</td><td id="psInfusion">—</td></tr>
+        <tr><td>PK/PD hedefi</td><td id="psPkpd">—</td></tr>
+        <tr><td>Hazırlama / uygulama</td><td id="psPrep">—</td></tr>
+      </table>
+    </div>
+
+    <div class="ps-box">
+      <h3>4. Y-SITE / GEÇİMSİZLİK</h3>
+      <div id="psCompat">Bu hastaya özgü Y-site değerlendirmesi yapılmadı.</div>
+    </div>
+
+    <div class="ps-box">
+      <h3>5. ÖNEMLİ UYARILAR</h3>
+      <div id="psWarnings">—</div>
+    </div>
+  </div>
+
+  <div class="ps-handwrite">
+    <div>
+      <strong>HASTA KİMLİĞİ – EL YAZISI İLE</strong><br>
+      Adı Soyadı: ___________________________________________<br>
+      Yatak No: ____________ &nbsp;&nbsp; TC Kimlik No: __________________________
+    </div>
+    <div>
+      <strong>PROTOKOL NUMARASI – EL YAZISI İLE</strong><br>
+      Protokol No: __________________________________________<br>
+      Doktor Adı Soyadı / İmza: _______________________________
+    </div>
+  </div>
+
+  <div class="ps-footer">
+    <span>β-Laktam İnfüzyon Karar Desteği v0.2.1</span>
+    <span>Klinik karar destek çıktısıdır.</span>
+  </div>
+</section>
+
 </main>
 
 <footer>
