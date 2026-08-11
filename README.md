@@ -29,3 +29,4 @@ Bu yazılım eğitim ve yerel protokol geliştirme amaçlıdır; reçete yerine 
 
 ## Güncelleme
 Kodda değişiklik yaptıktan sonra `sw.js` içindeki `CACHE` sürümünü örn. `beta-lactam-icu-v0.1.1` olarak artırmanız, eski cache'in temiz biçimde yenilenmesini kolaylaştırır.
+
