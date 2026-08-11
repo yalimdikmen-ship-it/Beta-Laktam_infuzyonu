@@ -189,3 +189,5 @@ button:disabled{opacity:.42;cursor:not-allowed}.nurse-head{display:flex;justify-
 @media(max-width:520px){
   .admin-protocol-grid{grid-template-columns:1fr}
 }
+
+.clinical-detail-panels{margin-top:18px}

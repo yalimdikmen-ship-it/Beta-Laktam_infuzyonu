@@ -198,8 +198,8 @@ function updateBMI(){const w=+$("weight").value,h=+$("height").value/100;if(w&&h
 ["weight","height"].forEach(x=>$(x).addEventListener("input",updateBMI)); updateBMI();
 $("rrt").addEventListener("change",()=>{$("effluentWrap").classList.toggle("hidden",$("rrt").value!=="crrt");updateRenal()});
 $("acceptDisclaimer").addEventListener("change",()=>{
- if($("acceptDisclaimer").checked){disclaimerAcceptedAt=new Date();$("acceptStamp").textContent="✓ KLİNİK GÜVENLİK UYARISI OKUNDU VE KABUL EDİLDİ — "+disclaimerAcceptedAt.toLocaleString("tr-TR");$("acceptStamp").classList.remove("hidden");$("printBtn").disabled=false;$("nurseBtn").disabled=false;$("nurseBtn").disabled=false}
- else{disclaimerAcceptedAt=null;$("acceptStamp").classList.add("hidden");$("printBtn").disabled=true;$("nurseBtn").disabled=true;$("nurseBtn").disabled=true;$("nursing").classList.add("hidden")}
+ if($("acceptDisclaimer").checked){disclaimerAcceptedAt=new Date();$("acceptStamp").textContent="✓ KLİNİK GÜVENLİK UYARISI OKUNDU VE KABUL EDİLDİ — "+disclaimerAcceptedAt.toLocaleString("tr-TR");$("acceptStamp").classList.remove("hidden");$("printBtn").disabled=false;$("nurseBtn").disabled=false}
+ else{disclaimerAcceptedAt=null;$("acceptStamp").classList.add("hidden");$("printBtn").disabled=true;$("nurseBtn").disabled=true;$("nursing").classList.add("hidden")}
 });
 
 
@@ -270,8 +270,8 @@ function generate(){
   $("infusion").textContent=d.infusion;
   $("pkpd").textContent=d.pkpd;
   $("prep").textContent=d.prep;
-  $("stability").textContent=STABILITY[key] || "İlaç-spesifik stabiliteyi güncel ürün bilgisi ve yerel eczane protokolüyle doğrulayın.";
-  $("extracorp").textContent=ecmoAdvice(key,crcl,rrt);
+  if($("stability")) $("stability").textContent=STABILITY[key] || "İlaç-spesifik stabiliteyi güncel ürün bilgisi ve yerel eczane protokolüyle doğrulayın.";
+  if($("extracorp")) $("extracorp").textContent=ecmoAdvice(key,crcl,rrt);
 
   let warnings=[...d.warnings];
   if(shock) warnings.unshift("Septik şok: terapötik konsantrasyona hızlı ulaşmak için ilk dozun geciktirilmemesi ve yükleme yaklaşımı önemlidir.");
