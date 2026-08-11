@@ -103,3 +103,34 @@ button:disabled{opacity:.42;cursor:not-allowed}.nurse-head{display:flex;justify-
 
 #ecmoSummary{border-left:4px solid #2563eb}.ecmo-check span{display:block;margin-bottom:6px}
 .ecmo-banner{background:#eff6ff;border:1px solid #93c5fd;color:#1e3a8a;border-radius:10px;padding:11px 13px;font-weight:700}
+
+.nursing-card-wrap{
+  margin-top:18px;
+  border:2px solid #0f766e;
+  background:#f0fdfa;
+  border-radius:14px;
+  padding:16px;
+}
+.nursing-card-wrap .eyebrow{color:#0f766e}
+.nursing-card-wrap h3{margin:2px 0 0;font-size:18px}
+.nurse-primary{
+  background:#0f766e;
+  color:#fff;
+  font-size:14px;
+  font-weight:900;
+  padding:12px 16px;
+  border-radius:10px;
+  box-shadow:0 5px 16px rgba(15,118,110,.2);
+}
+.nurse-primary:disabled{opacity:.38;box-shadow:none}
+.nursing-card-wrap .nursing{margin-top:14px}
+@media(max-width:820px){
+  .nurse-head{display:block}
+  .nurse-primary{width:100%;margin-top:12px}
+}
+@media print{
+  .nursing-card-wrap{display:block!important;border:1px solid #0f766e!important;background:#fff!important}
+  .nurse-primary{display:none!important}
+}
+
+#effluentWrap small{display:block;margin-top:6px;color:#64748b;font-size:11px;line-height:1.35}

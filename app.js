@@ -201,13 +201,25 @@ $("acceptDisclaimer").addEventListener("change",()=>{
  if($("acceptDisclaimer").checked){disclaimerAcceptedAt=new Date();$("acceptStamp").textContent="✓ KLİNİK GÜVENLİK UYARISI OKUNDU VE KABUL EDİLDİ — "+disclaimerAcceptedAt.toLocaleString("tr-TR");$("acceptStamp").classList.remove("hidden");$("printBtn").disabled=false;$("nurseBtn").disabled=false}
  else{disclaimerAcceptedAt=null;$("acceptStamp").classList.add("hidden");$("printBtn").disabled=true;$("nurseBtn").disabled=true;$("nursing").classList.add("hidden")}
 });
-$("nurseBtn").addEventListener("click",()=>{if(disclaimerAcceptedAt)$("nursing").classList.toggle("hidden")});
+
+
+$("nurseBtn").addEventListener("click",()=>{
+  if(!disclaimerAcceptedAt){
+    alert("Hemşire uygulama kartını görüntülemek için klinik güvenlik uyarısını okuyup kabul etmeniz gerekir.");
+    return;
+  }
+  $("nursing").classList.toggle("hidden");
+  $("nurseBtn").textContent = $("nursing").classList.contains("hidden")
+    ? "👩‍⚕️ HEMŞİRE KARTINI GÖSTER"
+    : "👩‍⚕️ HEMŞİRE KARTINI GİZLE";
+});
+
 function renalDoseText(k,c,r,e){
  if(r==="crrt"){
-  if(k==="piptazo")return "4.5 g IV q8h / 4 saat (EI; CRRT dahil)";
-  if(k==="mero")return "1 g IV q8h; seçilmiş hastada 3 saat EI düşünülebilir (CVVHD)";
-  if(k==="cefepime")return "1 g IV q8h; seçilmiş hastada 4 saat EI düşünülebilir";
-  if(k==="cefiderocol"){if(!e)return "CRRT: effluent hızı girilmeden doz oluşturulamaz";if(e<=2)return "1.5 g IV q12h / 3 saat";if(e<=3)return "2 g IV q12h / 3 saat";if(e<=4)return "1.5 g IV q8h / 3 saat";return "2 g IV q8h / 3 saat"}
+  if(k==="piptazo")return e?`4.5 g IV q8h / 4 saat (EI); CRRT effluent ${e} mL/kg/saat — yüksek effluent/rezidüel klirenste hedefi TDM/yerel protokolle doğrula`:"CRRT: effluent dozu girilmeden kesinleştirme yapmayın";
+  if(k==="mero")return e?`1 g IV q8h / 3 saat EI başlangıç yaklaşımı; CRRT effluent ${e} mL/kg/saat, rezidüel renal fonksiyon ve MIC ile doğrula`:"CRRT: effluent dozu girilmeden kesinleştirme yapmayın";
+  if(k==="cefepime")return e?`1 g IV q8h / 4 saat EI başlangıç yaklaşımı; CRRT effluent ${e} mL/kg/saat ve nörotoksisite/TDM ile doğrula`:"CRRT: effluent dozu girilmeden kesinleştirme yapmayın";
+  if(k==="cefiderocol"){if(!e)return "CRRT: effluent dozu girilmeden doz oluşturulamaz";if(e<7.5)return "1.5 g IV q12h / 3 saat";if(e<=15)return "1.5 g IV q8h / 3 saat";if(e<=30)return "2 g IV q8h / 3 saat";return "2 g IV q6h / 3 saat"}
   return "CRRT: ilaç-spesifik yerel/üretici tablosuyla doğrulayın";
  }
  if(r==="ihd"||r==="sled")return "IHD/SLED: kesin otomatik doz verilmez; yerel RRT protokolüyle doğrulayın";
@@ -223,6 +235,11 @@ function renalDoseText(k,c,r,e){
 
 function generate(){
   const key=$("drug").value, d=DRUGS[key], crcl=+$("crcl").value, rrt=$("rrt").value, eff=+$("effluent").value;
+  if(rrt==="crrt" && (!eff || eff<5)){
+    alert("CRRT için effluent dozunu mL/kg/saat olarak giriniz. Bu değer doz değerlendirmesinde kullanılacaktır.");
+    $("effluent").focus();
+    return;
+  }
   const mic=$("mic").value, shock=$("shock").checked, aki=$("aki").checked;
   $("resultTitle").textContent=d.name;
   $("loading").textContent=d.loading;
@@ -283,6 +300,7 @@ function fillPrintSheet(){
   $("psScr").textContent=($("scr").value||"—")+" mg/dL";
   $("psCrcl").textContent=($("crcl").value||"—")+" mL/dk";
   $("psRrt").textContent=rrtMap[$("rrt").value] || "—";
+  $("psEffluent").textContent=$("rrt").value==="crrt" && $("effluent").value ? $("effluent").value+" mL/kg/saat" : "—";
   const e=$("ecmo").value, ef=$("ecmoFlow").value;
   $("psEcmo").textContent=e==="none"?"Yok":`${e==="vv"?"VV-ECMO":"VA-ECMO"}${ef?" / "+ef+" L/dk":""}`;
   $("psSite").textContent=siteMap[$("site").value] || "—";

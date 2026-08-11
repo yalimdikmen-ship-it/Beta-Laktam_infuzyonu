@@ -1,5 +1,5 @@
 
-const CACHE = "beta-lactam-icu-v0.3.0";
+const CACHE = "beta-lactam-icu-v0.3.2";
 const ASSETS = [
   "./",
   "./index.html",

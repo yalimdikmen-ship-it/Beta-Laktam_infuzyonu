@@ -1,4 +1,4 @@
-# β-Laktam ICU PWA — v0.3.0
+# β-Laktam ICU PWA — v0.3.2
 
 Offline çalışabilen erişkin yoğun bakım β-laktam prolonged-infusion karar destek **prototipi**.
 
@@ -35,23 +35,39 @@ Kodda değişiklik yaptıktan sonra `sw.js` içindeki `CACHE` sürümünü örn.
 Ayrıntılı disclaimer/kabul kaydı; PDF ve hemşire kartı kabul kilidi; el yazısı hasta kimliği ve protokol no alanları; BMI; CRRT effluent alanı; genişletilmiş renal karar mantığı.
 
 
-## v0.3.0
+## v0.3.2
 - “PDF HAZIRLA” düğmesi Y-site uyumluluğu bölümünün hemen altına taşındı.
 - PDF düğmesi daha büyük ve belirgin hale getirildi.
 - Tarayıcı web sayfasını yazdırmak yerine tek A4’e özel protokol baskı sayfası oluşturulur.
 - Normal renal fonksiyonda yanlış “yüksek doğrulama gereksinimi” uyarısı veren koşul düzeltildi.
 
 
-## v0.3.0
+## v0.3.2
 - Geliştirici ve kurum bilgisi başlık altına eklendi.
 - Uygulamanın en altına temel kaynakça eklendi.
 - PDF çıktısına geliştirici/kurum bilgisi ve kısa kaynak notu eklendi.
 
 
-## v0.3.0
+## v0.3.2
 - VV-ECMO ve VA-ECMO seçimi, ECMO akımı ve ECMO+RRT değerlendirmesi eklendi.
 - Meropenem ve sefepim için ECMO-spesifik PK/PD karar uyarıları eklendi.
 - Stabilite/infüzyon güvenliği paneli eklendi.
 - CRRT/RRT uyarıları ekstrakorporeal destek ile entegre edildi.
 - PDF çıktısına ECMO bilgisi eklendi.
 - ECMO ve prolonged-infusion Y-site kaynakları kaynakçaya eklendi.
+
+
+## v0.3.2
+- Hemşire Uygulama Kartı görünürlüğü geri getirildi.
+- Kart sonuç bölümünde belirgin, ayrı bir klinik panel olarak gösterilir.
+- Disclaimer kabul edilmeden hemşire kartı açılamaz.
+- Kart aç/kapat düğmesi eklendi.
+- ECMO, CRRT, stabilite ve PDF özellikleri korunmuştur.
+
+
+## v0.3.2
+- CRRT seçildiğinde effluent dozu mL/kg/saat olarak zorunlu giriş alanıdır.
+- Effluent değeri CRRT doz kararında kullanılır ve PDF çıktısında gösterilir.
+- Cefiderokol CRRT doz eşikleri effluent mL/kg/saat tabanlıdır.
+- Piperasilin/tazobaktam, meropenem ve sefepim CRRT değerlendirmesinde effluent değeri görünürdür.
+- AKI (Akut Böbrek Hasarı) ve ARC (Artmış Renal Klirens) açılımları arayüz/uyarılara eklenmiştir.
