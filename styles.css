@@ -36,3 +36,12 @@ button:active{transform:translateY(1px)}
 footer{max-width:1180px;margin:0 auto 30px;padding:0 18px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:20px}
 @media(max-width:820px){.grid.two,.result-grid,.form-grid{grid-template-columns:1fr}.topbar{display:block}.badge{display:inline-block;margin-top:12px}.compat-row{grid-template-columns:1fr}.section-head{align-items:center}.container{padding:0 12px 30px}}
 @media print{.topbar,footer,#printBtn,.alert,.card:not(#resultCard){display:none!important}body{background:#fff}.container{margin:0;max-width:none}.card{box-shadow:none;border:0}#resultCard{display:block!important}}
+
+.disclaimer{background:#fff7ed;border:3px solid #b91c1c;border-radius:16px;padding:18px 20px;margin-bottom:20px;box-shadow:0 8px 28px rgba(185,28,28,.12)}
+.disclaimer-title{background:#b91c1c;color:#fff;font-weight:900;font-size:18px;padding:11px 14px;border-radius:10px;margin-bottom:12px}
+.disclaimer p{margin:10px 0;color:#450a0a;font-size:14px}.consent-line{display:flex;gap:10px;align-items:flex-start;background:#fef2f2;border:2px solid #ef4444;border-radius:10px;padding:13px;margin-top:14px;color:#7f1d1d;font-weight:900}
+.consent-line input{width:20px;height:20px;margin:0;flex:0 0 auto}.accept-stamp{margin-top:10px;background:#f0fdf4;border:2px solid #16a34a;color:#166534;padding:10px 12px;border-radius:9px;font-weight:900}
+button:disabled{opacity:.42;cursor:not-allowed}.nurse-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.handwrite{display:grid;grid-template-columns:1fr 1fr;gap:18px;border:2px solid #94a3b8;border-radius:12px;padding:16px;margin-top:18px;line-height:2;font-size:13px}
+@media(max-width:820px){.handwrite{grid-template-columns:1fr}}
+@media print{.disclaimer{display:block!important;border:2px solid #b91c1c!important}.consent-line{display:none!important}.accept-stamp{display:block!important}.nursing{display:block!important;background:#fff!important;color:#000!important;border:1px solid #111}.handwrite{display:grid!important;grid-template-columns:1fr 1fr!important;page-break-inside:avoid}#nurseBtn{display:none!important}}

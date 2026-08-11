@@ -154,12 +154,41 @@ function updateRenal(){
 ["crcl","rrt","aki","arc"].forEach(id=>$(id).addEventListener("change",updateRenal));
 $("calcCrcl").addEventListener("click",cg);
 
+
+let disclaimerAcceptedAt=null;
+function updateBMI(){const w=+$("weight").value,h=+$("height").value/100;if(w&&h)$("bmi").value=(w/(h*h)).toFixed(1)}
+["weight","height"].forEach(x=>$(x).addEventListener("input",updateBMI)); updateBMI();
+$("rrt").addEventListener("change",()=>{$("effluentWrap").classList.toggle("hidden",$("rrt").value!=="crrt");updateRenal()});
+$("acceptDisclaimer").addEventListener("change",()=>{
+ if($("acceptDisclaimer").checked){disclaimerAcceptedAt=new Date();$("acceptStamp").textContent="✓ KLİNİK GÜVENLİK UYARISI OKUNDU VE KABUL EDİLDİ — "+disclaimerAcceptedAt.toLocaleString("tr-TR");$("acceptStamp").classList.remove("hidden");$("printBtn").disabled=false;$("nurseBtn").disabled=false}
+ else{disclaimerAcceptedAt=null;$("acceptStamp").classList.add("hidden");$("printBtn").disabled=true;$("nurseBtn").disabled=true;$("nursing").classList.add("hidden")}
+});
+$("nurseBtn").addEventListener("click",()=>{if(disclaimerAcceptedAt)$("nursing").classList.toggle("hidden")});
+function renalDoseText(k,c,r,e){
+ if(r==="crrt"){
+  if(k==="piptazo")return "4.5 g IV q8h / 4 saat (EI; CRRT dahil)";
+  if(k==="mero")return "1 g IV q8h; seçilmiş hastada 3 saat EI düşünülebilir (CVVHD)";
+  if(k==="cefepime")return "1 g IV q8h; seçilmiş hastada 4 saat EI düşünülebilir";
+  if(k==="cefiderocol"){if(!e)return "CRRT: effluent hızı girilmeden doz oluşturulamaz";if(e<=2)return "1.5 g IV q12h / 3 saat";if(e<=3)return "2 g IV q12h / 3 saat";if(e<=4)return "1.5 g IV q8h / 3 saat";return "2 g IV q8h / 3 saat"}
+  return "CRRT: ilaç-spesifik yerel/üretici tablosuyla doğrulayın";
+ }
+ if(r==="ihd"||r==="sled")return "IHD/SLED: kesin otomatik doz verilmez; yerel RRT protokolüyle doğrulayın";
+ if(!c)return null;
+ if(k==="piptazo")return c>20?"4.5 g IV q8h / 4 saat (EI)":"CrCl <20: kısa infüzyon renal rejimine geç";
+ if(k==="mero"){if(c>50)return "1 g IV q8h / 3 saat";if(c>=26)return "1 g IV q12h / 3 saat";return "CrCl <26: kısa infüzyon renal rejimi"}
+ if(k==="cefepime"){if(c>60)return "2 g IV q8h / 4 saat";if(c>=30)return "2 g IV q12h / 4 saat";return "CrCl <30: kısa infüzyon renal rejimi"}
+ if(k==="ceftazidime"){if(c>50)return "2 g IV q8h / 4 saat";if(c>=31)return "2 g IV q12h / 4 saat";return "CrCl <31: kısa infüzyon renal rejimi"}
+ if(k==="cefiderocol"){if(c>=120)return "2 g IV q6h / 3 saat";if(c>=60)return "2 g IV q8h / 3 saat";if(c>=30)return "1.5 g IV q8h / 3 saat";if(c>=15)return "1 g IV q8h / 3 saat";return "0.75 g IV q12h / 3 saat; IHD varsa HD sonrası"}
+ if(k==="merovab"){if(c>50)return "4 g IV q8h / 3 saat";if(c>=30)return "2 g IV q8h / 3 saat";if(c>=15)return "2 g IV q12h / 3 saat";return "1 g IV q12h / 3 saat"}
+ return null
+}
+
 function generate(){
-  const key=$("drug").value, d=DRUGS[key], crcl=+$("crcl").value, rrt=$("rrt").value;
+  const key=$("drug").value, d=DRUGS[key], crcl=+$("crcl").value, rrt=$("rrt").value, eff=+$("effluent").value;
   const mic=$("mic").value, shock=$("shock").checked, aki=$("aki").checked;
   $("resultTitle").textContent=d.name;
   $("loading").textContent=d.loading;
-  $("maintenance").textContent=d.maintenance;
+  const renalRec=renalDoseText(key,crcl,rrt,eff); $("maintenance").textContent=renalRec||d.maintenance;
   $("infusion").textContent=d.infusion;
   $("pkpd").textContent=d.pkpd;
   $("prep").textContent=d.prep;
@@ -179,9 +208,8 @@ function generate(){
   $("riskBanner").innerHTML=`<div class="risk ${riskClass}">${riskText}</div>`;
 
   $("nursing").textContent =
-`${d.name}
-Yükleme / ilk doz: ${d.loading}
-İdame: ${d.maintenance}
+`${d.name}\n✓ KLİNİK GÜVENLİK UYARISI OKUNDU VE KABUL EDİLDİ\nKabul: ${disclaimerAcceptedAt ? disclaimerAcceptedAt.toLocaleString("tr-TR") : "Henüz kabul edilmedi"}\nHEKİM TARAFINDAN KLİNİK OLARAK DOĞRULANMADAN UYGULAMAYA GEÇİLMEZ.\n\nYükleme / ilk doz: ${d.loading}
+İdame: ${renalRec || d.maintenance}
 İnfüzyon: ${d.infusion}
 
 UYARI:
@@ -195,7 +223,7 @@ UYARI:
 
 $("generate").addEventListener("click",generate);
 $("reset").addEventListener("click",()=>location.reload());
-$("printBtn").addEventListener("click",()=>window.print());
+$("printBtn").addEventListener("click",()=>{if(!disclaimerAcceptedAt){alert("PDF için klinik güvenlik uyarısını okuyup kabul etmeniz gerekir.");return}window.print()});
 
 $("checkCompat").addEventListener("click",()=>{
   const d=$("compatDrug").value, c=$("coDrug").value;

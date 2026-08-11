@@ -22,12 +22,15 @@
 </header>
 
 <main class="container">
-  <section class="alert warning">
-    <strong>Klinik güvenlik notu:</strong>
-    Bu uygulama eğitim ve yerel protokol geliştirme amaçlı bir karar destek prototipidir; reçete yerine geçmez.
-    Renal replasman tedavisi, hızla değişen renal fonksiyon, yüksek MIC, obezite ve kritik PK değişkenlerinde
-    yerel eczane/enfeksiyon protokolü ve mümkünse TDM ile doğrulama gerekir.
-  </section>
+  <section id="disclaimerBox" class="disclaimer">
+<div class="disclaimer-title">⚠️ KLİNİK KARAR DESTEK SİSTEMİ – ÖNEMLİ UYARI</div>
+<p><strong>Bu uygulama yalnızca erişkin yoğun bakım hastalarında β-laktam antibiyotiklerin dozlama ve infüzyon stratejilerinin değerlendirilmesine yardımcı olmak amacıyla geliştirilmiş bir klinik karar destek aracıdır. Tek başına tanı, tedavi veya reçete kararı vermek amacıyla kullanılmamalıdır.</strong></p>
+<p><strong>Yükleme dozu, idame dozu, infüzyon süresi, renal doz ayarlaması, PK/PD hedefi, ilaç geçimsizliği ve stabilite bilgileri; klinik durum, enfeksiyon odağı, mikroorganizma/MIC, güncel renal fonksiyon, renal replasman tedavisi, vücut kompozisyonu, eşzamanlı ilaçlar ve yerel direnç verileriyle birlikte hekim tarafından değerlendirilmelidir.</strong></p>
+<p><strong>AKI, hızla değişen renal fonksiyon, ARC, CRRT, IHD/SLED, obezite, yüksek MIC, MDR/XDR etkenler, SSS enfeksiyonları ve kritik PK/PD değişikliklerinde otomatik öneriler tek başına kullanılmamalıdır. “Uyumluluk verisi yok” sonucu “uyumludur” anlamına gelmez.</strong></p>
+<p><strong>Nihai antibiyotik seçimi, doz, uygulama şekli ve tedavi süresinin sorumluluğu hastayı değerlendiren hekime aittir. Gerektiğinde enfeksiyon hastalıkları, klinik eczacılık/mikrobiyoloji görüşü ve TDM kullanılmalıdır.</strong></p>
+<label class="consent-line"><input id="acceptDisclaimer" type="checkbox"><span>UYARIYI OKUDUM, ANLADIM VE KLİNİK KARARIN HEKİM TARAFINDAN DOĞRULANMASI GEREKTİĞİNİ KABUL EDİYORUM.</span></label>
+<div id="acceptStamp" class="accept-stamp hidden"></div>
+</section>
 
   <div class="grid two">
     <section class="card">
@@ -45,6 +48,8 @@
         <label>Kilo (kg)
           <input id="weight" type="number" min="30" max="300" step="0.1" value="80">
         </label>
+        <label>Boy (cm)<input id="height" type="number" min="120" max="230" value="175"></label>
+        <label>BMI (otomatik)<input id="bmi" type="text" readonly></label>
         <label>Serum kreatinin (mg/dL)
           <input id="scr" type="number" min="0.2" max="15" step="0.01" value="1.0">
         </label>
@@ -58,6 +63,9 @@
             <option value="ihd">Aralıklı hemodiyaliz</option>
             <option value="sled">SLED / PIRRT</option>
           </select>
+        </label>
+        <label id="effluentWrap" class="hidden">CRRT effluent (L/saat)
+          <input id="effluent" type="number" min="0.5" max="8" step="0.1" placeholder="Örn. 2.5">
         </label>
       </div>
       <div class="button-row">
@@ -108,7 +116,7 @@
         <div class="eyebrow">ÖNERİLEN PROTOKOL</div>
         <h2 id="resultTitle"></h2>
       </div>
-      <button id="printBtn" class="secondary">Yazdır / PDF</button>
+      <button id="printBtn" class="secondary" disabled>Yazdır / PDF</button>
     </div>
     <div id="riskBanner"></div>
     <div class="result-grid">
@@ -127,8 +135,12 @@
         <div id="warnings" class="text-panel"></div>
       </div>
     </div>
-    <h3>Hemşire uygulama özeti</h3>
-    <div id="nursing" class="nursing"></div>
+    <div class="nurse-head"><h3>Hemşire uygulama kartı</h3><button id="nurseBtn" class="secondary" disabled>Hemşire kartını göster</button></div>
+    <div id="nursing" class="nursing hidden"></div>
+    <div class="handwrite">
+      <div><strong>HASTA KİMLİĞİ (EL YAZISI İLE DOLDURUNUZ)</strong><br>Adı Soyadı: ___________________________<br>Yatak No: __________ &nbsp; TC Kimlik No: __________________</div>
+      <div><strong>PROTOKOL NUMARASI (EL YAZISI İLE)</strong><br>Protokol No: ___________________________<br>Doktor Adı Soyadı / İmza: __________________</div>
+    </div>
   </section>
 
   <section class="card">
@@ -162,7 +174,7 @@
   <section class="card compact">
     <h2>Kaynak yaklaşımı ve sürüm</h2>
     <p>
-      Sürüm <strong>0.1.0</strong>. Karar motoru yükleme dozunun geciktirilmemesi, β-laktamlarda zaman-bağımlı
+      Sürüm <strong>0.2.0</strong>. Karar motoru yükleme dozunun geciktirilmemesi, β-laktamlarda zaman-bağımlı
       PK/PD hedefleri ve ağır hastada prolonged infusion yaklaşımı üzerine kuruludur. İlaç stabilitesi ve Y-site
       uyumluluğu ürün, konsantrasyon, dilüent, sıcaklık ve üreticiye bağlı olduğundan yerel eczane veri tabanı ile
       doğrulanmalıdır.

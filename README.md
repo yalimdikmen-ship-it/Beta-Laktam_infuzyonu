@@ -1,4 +1,4 @@
-# β-Laktam ICU PWA — v0.1.0
+# β-Laktam ICU PWA — v0.2.0
 
 Offline çalışabilen erişkin yoğun bakım β-laktam prolonged-infusion karar destek **prototipi**.
 
@@ -30,3 +30,6 @@ Bu yazılım eğitim ve yerel protokol geliştirme amaçlıdır; reçete yerine 
 ## Güncelleme
 Kodda değişiklik yaptıktan sonra `sw.js` içindeki `CACHE` sürümünü örn. `beta-lactam-icu-v0.1.1` olarak artırmanız, eski cache'in temiz biçimde yenilenmesini kolaylaştırır.
 
+
+## v0.2
+Ayrıntılı disclaimer/kabul kaydı; PDF ve hemşire kartı kabul kilidi; el yazısı hasta kimliği ve protokol no alanları; BMI; CRRT effluent alanı; genişletilmiş renal karar mantığı.
