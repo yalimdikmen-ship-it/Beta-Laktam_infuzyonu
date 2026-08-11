@@ -235,6 +235,27 @@ function renalDoseText(k,c,r,e){
  return null
 }
 
+
+function applicationProtocolText(key,d,renalRec){
+  let extra="";
+  if(key==="piptazo"){
+    extra="Örnek: 4.5 g / 100 mL hazırlanıyorsa 4 saatte 25 mL/saat. Kullanılan ürün ve yerel hazırlama protokolü farklıysa hacim/pompa hızı buna göre yeniden hesaplanmalıdır.";
+  } else if(key==="mero"){
+    extra="3 saatlik extended infusion uygulanır. Meropenem stabilitesi konsantrasyon ve sıcaklığa duyarlıdır; 24 saatlik continuous infusion yalnız valide edilmiş koşullarda kullanılmalıdır.";
+  } else if(key==="cefepime"){
+    extra="3–4 saatlik extended infusion. Renal yetmezlikte nörotoksisite açısından yakın klinik izlem gerekir.";
+  } else if(key==="ceftazidime"){
+    extra="3 saatlik extended infusion. Continuous infusion düşünülüyorsa stabilite/torba değişim süresi kurum tarafından valide edilmelidir.";
+  } else if(key==="cefiderocol"){
+    extra="3 saatlik infüzyon standart uygulamadır. CRRT varsa effluent dozu renal doz kararına dahil edilir.";
+  } else if(key==="merovab"){
+    extra="3 saatlik infüzyon standart uygulamadır.";
+  } else {
+    extra="Kurumca valide edilmiş dilüent, konsantrasyon ve infüzyon seti kullanılmalıdır.";
+  }
+  return `${d.prep} ${extra}`;
+}
+
 function generate(){
   const key=$("drug").value, d=DRUGS[key], crcl=+$("crcl").value, rrt=$("rrt").value, eff=+$("effluent").value;
   if(rrt==="crrt" && (!eff || eff<5)){
@@ -266,6 +287,46 @@ function generate(){
   if(rrt!=="none" || aki || (crcl>0 && crcl<30)){riskClass="red";riskText="Yüksek doğrulama gereksinimi: renal fonksiyon/RRT nedeniyle otomatik idame dozu kullanmayın."}
   else if(crcl>=130 || $("arc").checked || mic || shock){riskClass="amber";riskText="PK/PD hedef başarısızlığı riski artabilir; prolonged infusion ve klinik doğrulama önemli."}
   $("riskBanner").innerHTML=`<div class="risk ${riskClass}">${riskText}</div>`;
+
+  const adminText=applicationProtocolText(key,d,renalRec);
+  $("adminDrug").textContent=d.name;
+  $("adminLoading").textContent=d.loading;
+  $("adminMaintenance").textContent=renalRec||d.maintenance;
+  $("adminInfusion").textContent=d.infusion;
+  $("adminPrep").textContent=adminText;
+  const compatText=$("compatResult").innerText.trim();
+  $("adminYsite").textContent=compatText || "Aynı lümenden başka ilaç verilecekse güncel Y-site uyumluluğu doğrulanmalıdır. Veri yoksa uyumlu kabul etmeyin; ayrı lümen tercih edin.";
+
+  $("nursing").textContent =
+`${d.name}
+✓ KLİNİK GÜVENLİK UYARISI ${disclaimerAcceptedAt ? "OKUNDU VE KABUL EDİLDİ" : "HENÜZ KABUL EDİLMEDİ"}
+${disclaimerAcceptedAt ? "Kabul: "+disclaimerAcceptedAt.toLocaleString("tr-TR") : ""}
+HEKİM TARAFINDAN KLİNİK OLARAK DOĞRULANMADAN UYGULAMAYA GEÇİLMEZ.
+
+İLAÇ UYGULAMA PROTOKOLÜ
+Yükleme / ilk doz: ${d.loading}
+İdame: ${renalRec || d.maintenance}
+İnfüzyon: ${d.infusion}
+
+Hazırlama / uygulama:
+${adminText}
+
+Y-site / lümen:
+${compatText || "Eşzamanlı ilaç için Y-site uyumluluğunu doğrulayın. Veri yoksa ayrı lümen tercih edin."}
+
+Güvenlik:
+• Stabilite, konsantrasyon ve dilüenti yerel eczane protokolüyle doğrulayın.
+• CRRT varsa effluent dozunu; ECMO varsa renal fonksiyon/RRT/MIC/TDM durumunu birlikte değerlendirin.
+• Hekim doğrulaması olmadan uygulamaya geçilmez.`;
+
+  if(disclaimerAcceptedAt){
+    $("nursing").classList.remove("hidden");
+    $("nurseBtn").textContent="👩‍⚕️ HEMŞİRE KARTINI GİZLE";
+  }else{
+    $("nursing").classList.add("hidden");
+    $("nurseBtn").textContent="👩‍⚕️ HEMŞİRE KARTINI GÖSTER";
+  }
+
 $("resultCard").classList.remove("hidden");
   $("resultCard").scrollIntoView({behavior:"smooth",block:"start"});
 }
@@ -318,8 +379,12 @@ $("checkCompat").addEventListener("click",()=>{
   const status=(incompat[d]||{})[c];
   if(status==="red"){
     $("compatResult").innerHTML=`<strong style="color:#b91c1c">🔴 Ayrı uygulama / uyumsuzluk riski.</strong> ${DRUGS[d].name} + ${c} için aynı torba veya doğrulanmamış Y-site kullanımından kaçının; ayrı lümen tercih edin.`;
+    if($("adminYsite")) $("adminYsite").textContent=$("compatResult").innerText;
+
   }else{
     $("compatResult").innerHTML=`<strong style="color:#92400e">🟡 Prototip veri tabanında doğrulanmış sonuç yok.</strong> “Kayıt yok” uyumlu anlamına gelmez. Konsantrasyon, dilüent ve üreticiye özgü güncel Y-site kaynağından doğrulayın; doğrulanamıyorsa ayrı lümen kullanın.`;
+    if($("adminYsite")) $("adminYsite").textContent=$("compatResult").innerText;
+
   }
 });
 
