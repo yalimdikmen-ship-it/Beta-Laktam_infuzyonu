@@ -198,20 +198,22 @@ function updateBMI(){const w=+$("weight").value,h=+$("height").value/100;if(w&&h
 ["weight","height"].forEach(x=>$(x).addEventListener("input",updateBMI)); updateBMI();
 $("rrt").addEventListener("change",()=>{$("effluentWrap").classList.toggle("hidden",$("rrt").value!=="crrt");updateRenal()});
 $("acceptDisclaimer").addEventListener("change",()=>{
- if($("acceptDisclaimer").checked){disclaimerAcceptedAt=new Date();$("acceptStamp").textContent="✓ KLİNİK GÜVENLİK UYARISI OKUNDU VE KABUL EDİLDİ — "+disclaimerAcceptedAt.toLocaleString("tr-TR");$("acceptStamp").classList.remove("hidden");$("printBtn").disabled=false;$("nurseBtn").disabled=false}
- else{disclaimerAcceptedAt=null;$("acceptStamp").classList.add("hidden");$("printBtn").disabled=true;$("nurseBtn").disabled=true;$("nursing").classList.add("hidden")}
+ if($("acceptDisclaimer").checked){disclaimerAcceptedAt=new Date();$("acceptStamp").textContent="✓ KLİNİK GÜVENLİK UYARISI OKUNDU VE KABUL EDİLDİ — "+disclaimerAcceptedAt.toLocaleString("tr-TR");$("acceptStamp").classList.remove("hidden");$("printBtn").disabled=false;$("nurseBtn").disabled=false;$("nurseBtn").disabled=false}
+ else{disclaimerAcceptedAt=null;$("acceptStamp").classList.add("hidden");$("printBtn").disabled=true;$("nurseBtn").disabled=true;$("nurseBtn").disabled=true;$("nursing").classList.add("hidden")}
 });
+
+
+
 
 
 $("nurseBtn").addEventListener("click",()=>{
   if(!disclaimerAcceptedAt){
-    alert("Hemşire uygulama kartını görüntülemek için klinik güvenlik uyarısını okuyup kabul etmeniz gerekir.");
+    alert("Hemşire uygulama kartı için klinik güvenlik uyarısını okuyup kabul ediniz.");
     return;
   }
   $("nursing").classList.toggle("hidden");
-  $("nurseBtn").textContent = $("nursing").classList.contains("hidden")
-    ? "👩‍⚕️ HEMŞİRE KARTINI GÖSTER"
-    : "👩‍⚕️ HEMŞİRE KARTINI GİZLE";
+  $("nurseBtn").textContent=$("nursing").classList.contains("hidden")
+    ?"👩‍⚕️ HEMŞİRE KARTINI GÖSTER":"👩‍⚕️ HEMŞİRE KARTINI GİZLE";
 });
 
 function renalDoseText(k,c,r,e){
@@ -264,57 +266,42 @@ function generate(){
   if(rrt!=="none" || aki || (crcl>0 && crcl<30)){riskClass="red";riskText="Yüksek doğrulama gereksinimi: renal fonksiyon/RRT nedeniyle otomatik idame dozu kullanmayın."}
   else if(crcl>=130 || $("arc").checked || mic || shock){riskClass="amber";riskText="PK/PD hedef başarısızlığı riski artabilir; prolonged infusion ve klinik doğrulama önemli."}
   $("riskBanner").innerHTML=`<div class="risk ${riskClass}">${riskText}</div>`;
-
-  $("nursing").textContent =
-`${d.name}\n✓ KLİNİK GÜVENLİK UYARISI OKUNDU VE KABUL EDİLDİ\nKabul: ${disclaimerAcceptedAt ? disclaimerAcceptedAt.toLocaleString("tr-TR") : "Henüz kabul edilmedi"}\nHEKİM TARAFINDAN KLİNİK OLARAK DOĞRULANMADAN UYGULAMAYA GEÇİLMEZ.\n\nYükleme / ilk doz: ${d.loading}
-İdame: ${renalRec || d.maintenance}
-İnfüzyon: ${d.infusion}
-
-UYARI:
-• Aynı lümen/Y-site uyumluluğunu eşzamanlı her ilaç için doğrulayın.
-• Veri yoksa ayrı lümen veya flush-sekans yaklaşımı kullanın.
-• Hazırlama konsantrasyonu ve stabiliteyi yerel eczane protokolüyle doğrulayın.`;
-
-  $("resultCard").classList.remove("hidden");
+$("resultCard").classList.remove("hidden");
   $("resultCard").scrollIntoView({behavior:"smooth",block:"start"});
 }
 
 $("generate").addEventListener("click",generate);
 $("reset").addEventListener("click",()=>location.reload());
 function fillPrintSheet(){
-  const key=$("drug").value, d=DRUGS[key];
+  const key=$("drug").value,d=DRUGS[key];
+  const crcl=+$("crcl").value,eff=+$("effluent").value,rrt=$("rrt").value;
+  const renalRec=renalDoseText(key,crcl,rrt,eff);
   const sexMap={male:"Erkek",female:"Kadın"};
   const rrtMap={none:"Yok",crrt:"CRRT",ihd:"Aralıklı hemodiyaliz",sled:"SLED / PIRRT"};
-  const siteMap={
-    sepsis:"Sepsis / odağı belirsiz",hap:"HAP / VAP",bsi:"Bakteriyemi",
-    iai:"İntraabdominal",uti:"Komplike üriner",cns:"SSS enfeksiyonu",other:"Diğer"
-  };
-  const crcl=+$("crcl").value, eff=+$("effluent").value;
-  const renalRec=renalDoseText(key,crcl,$("rrt").value,eff);
+  const siteMap={sepsis:"Sepsis / odağı belirsiz",hap:"HAP / VAP",bsi:"Bakteriyemi",iai:"İntraabdominal",uti:"Komplike üriner",cns:"SSS enfeksiyonu",other:"Diğer"};
   $("psDate").textContent=new Date().toLocaleDateString("tr-TR");
-  $("psAcceptTime").textContent=disclaimerAcceptedAt ? disclaimerAcceptedAt.toLocaleString("tr-TR") : "—";
-  $("psAge").textContent=$("age").value || "—";
-  $("psSex").textContent=sexMap[$("sex").value] || "—";
+  $("psAcceptTime").textContent=disclaimerAcceptedAt?disclaimerAcceptedAt.toLocaleString("tr-TR"):"—";
+  $("psAge").textContent=$("age").value||"—";
+  $("psSex").textContent=sexMap[$("sex").value]||"—";
   $("psWeight").textContent=($("weight").value||"—")+" kg";
   $("psHeightBmi").textContent=($("height").value||"—")+" cm / BMI "+($("bmi").value||"—");
   $("psScr").textContent=($("scr").value||"—")+" mg/dL";
   $("psCrcl").textContent=($("crcl").value||"—")+" mL/dk";
-  $("psRrt").textContent=rrtMap[$("rrt").value] || "—";
-  $("psEffluent").textContent=$("rrt").value==="crrt" && $("effluent").value ? $("effluent").value+" mL/kg/saat" : "—";
-  const e=$("ecmo").value, ef=$("ecmoFlow").value;
-  $("psEcmo").textContent=e==="none"?"Yok":`${e==="vv"?"VV-ECMO":"VA-ECMO"}${ef?" / "+ef+" L/dk":""}`;
-  $("psSite").textContent=siteMap[$("site").value] || "—";
-  $("psOrganism").textContent=$("organism").value || "Bilinmiyor";
-  $("psMic").textContent=$("mic").value ? $("mic").value+" mg/L" : "Bilinmiyor";
+  $("psRrt").textContent=rrtMap[rrt]||"—";
+  $("psEffluent").textContent=rrt==="crrt"&&eff?eff+" mL/kg/saat":"—";
+  const e=$("ecmo").value,flow=$("ecmoFlow").value;
+  $("psEcmo").textContent=e==="none"?"Yok":`${e==="vv"?"VV-ECMO":"VA-ECMO"}${flow?" / "+flow+" L/dk":""}`;
+  $("psSite").textContent=siteMap[$("site").value]||"—";
+  $("psOrganism").textContent=$("organism").value||"Bilinmiyor";
+  $("psMic").textContent=$("mic").value?$("mic").value+" mg/L":"Bilinmiyor";
   $("psDrug").textContent=d.name;
   $("psLoading").textContent=d.loading;
-  $("psMaintenance").textContent=renalRec || d.maintenance;
+  $("psMaintenance").textContent=renalRec||d.maintenance;
   $("psInfusion").textContent=d.infusion;
   $("psPkpd").textContent=d.pkpd;
   $("psPrep").textContent=d.prep;
+  $("psCompat").textContent=$("compatResult").innerText.trim()||"Bu hastaya özgü Y-site değerlendirmesi yapılmadı.";
   $("psWarnings").textContent=d.warnings.slice(0,3).join(" • ");
-  const compat=$("compatResult").innerText.trim();
-  $("psCompat").textContent=compat || "Bu hastaya özgü Y-site değerlendirmesi yapılmadı.";
 }
 $("printBtn").addEventListener("click",()=>{
   if(!disclaimerAcceptedAt){

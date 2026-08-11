@@ -1,4 +1,4 @@
-# β-Laktam ICU PWA — v0.3.2
+# β-Laktam ICU PWA — v0.3.3
 
 Offline çalışabilen erişkin yoğun bakım β-laktam prolonged-infusion karar destek **prototipi**.
 
@@ -35,20 +35,20 @@ Kodda değişiklik yaptıktan sonra `sw.js` içindeki `CACHE` sürümünü örn.
 Ayrıntılı disclaimer/kabul kaydı; PDF ve hemşire kartı kabul kilidi; el yazısı hasta kimliği ve protokol no alanları; BMI; CRRT effluent alanı; genişletilmiş renal karar mantığı.
 
 
-## v0.3.2
+## v0.3.3
 - “PDF HAZIRLA” düğmesi Y-site uyumluluğu bölümünün hemen altına taşındı.
 - PDF düğmesi daha büyük ve belirgin hale getirildi.
 - Tarayıcı web sayfasını yazdırmak yerine tek A4’e özel protokol baskı sayfası oluşturulur.
 - Normal renal fonksiyonda yanlış “yüksek doğrulama gereksinimi” uyarısı veren koşul düzeltildi.
 
 
-## v0.3.2
+## v0.3.3
 - Geliştirici ve kurum bilgisi başlık altına eklendi.
 - Uygulamanın en altına temel kaynakça eklendi.
 - PDF çıktısına geliştirici/kurum bilgisi ve kısa kaynak notu eklendi.
 
 
-## v0.3.2
+## v0.3.3
 - VV-ECMO ve VA-ECMO seçimi, ECMO akımı ve ECMO+RRT değerlendirmesi eklendi.
 - Meropenem ve sefepim için ECMO-spesifik PK/PD karar uyarıları eklendi.
 - Stabilite/infüzyon güvenliği paneli eklendi.
@@ -57,7 +57,7 @@ Ayrıntılı disclaimer/kabul kaydı; PDF ve hemşire kartı kabul kilidi; el ya
 - ECMO ve prolonged-infusion Y-site kaynakları kaynakçaya eklendi.
 
 
-## v0.3.2
+## v0.3.3
 - Hemşire Uygulama Kartı görünürlüğü geri getirildi.
 - Kart sonuç bölümünde belirgin, ayrı bir klinik panel olarak gösterilir.
 - Disclaimer kabul edilmeden hemşire kartı açılamaz.
@@ -65,9 +65,17 @@ Ayrıntılı disclaimer/kabul kaydı; PDF ve hemşire kartı kabul kilidi; el ya
 - ECMO, CRRT, stabilite ve PDF özellikleri korunmuştur.
 
 
-## v0.3.2
+## v0.3.3
 - CRRT seçildiğinde effluent dozu mL/kg/saat olarak zorunlu giriş alanıdır.
 - Effluent değeri CRRT doz kararında kullanılır ve PDF çıktısında gösterilir.
 - Cefiderokol CRRT doz eşikleri effluent mL/kg/saat tabanlıdır.
 - Piperasilin/tazobaktam, meropenem ve sefepim CRRT değerlendirmesinde effluent değeri görünürdür.
 - AKI (Akut Böbrek Hasarı) ve ARC (Artmış Renal Klirens) açılımları arayüz/uyarılara eklenmiştir.
+
+
+## v0.3.3 — düzeltme
+- Hemşire Uygulama Kartı HTML ve JavaScript bağlantıları yeniden oluşturuldu.
+- Disclaimer kabulü sonrası kart düğmesi etkinleşir; kart aç/kapat çalışır.
+- PDF baskı sistemi tek bir özel `printSheet` üzerinden yeniden kuruldu.
+- Baskıda web arayüzünün tamamı gizlenir; yalnız tek A4 protokol sayfası basılır.
+- CRRT effluent, ECMO, hasta/renal veriler ve protokol bilgileri tek A4 çıktıda korunur.

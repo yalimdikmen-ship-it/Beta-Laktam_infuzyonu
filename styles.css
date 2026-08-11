@@ -35,7 +35,7 @@ button:active{transform:translateY(1px)}
 .muted{color:var(--muted);font-size:14px}
 footer{max-width:1180px;margin:0 auto 30px;padding:0 18px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:20px}
 @media(max-width:820px){.grid.two,.result-grid,.form-grid{grid-template-columns:1fr}.topbar{display:block}.badge{display:inline-block;margin-top:12px}.compat-row{grid-template-columns:1fr}.section-head{align-items:center}.container{padding:0 12px 30px}}
-@media print{.topbar,footer,#printBtn,.alert,.card:not(#resultCard){display:none!important}body{background:#fff}.container{margin:0;max-width:none}.card{box-shadow:none;border:0}#resultCard{display:block!important}}
+
 
 .disclaimer{background:#fff7ed;border:3px solid #b91c1c;border-radius:16px;padding:18px 20px;margin-bottom:20px;box-shadow:0 8px 28px rgba(185,28,28,.12)}
 .disclaimer-title{background:#b91c1c;color:#fff;font-weight:900;font-size:18px;padding:11px 14px;border-radius:10px;margin-bottom:12px}
@@ -44,7 +44,7 @@ footer{max-width:1180px;margin:0 auto 30px;padding:0 18px;color:var(--muted);fon
 button:disabled{opacity:.42;cursor:not-allowed}.nurse-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .handwrite{display:grid;grid-template-columns:1fr 1fr;gap:18px;border:2px solid #94a3b8;border-radius:12px;padding:16px;margin-top:18px;line-height:2;font-size:13px}
 @media(max-width:820px){.handwrite{grid-template-columns:1fr}}
-@media print{.disclaimer{display:block!important;border:2px solid #b91c1c!important}.consent-line{display:none!important}.accept-stamp{display:block!important}.nursing{display:block!important;background:#fff!important;color:#000!important;border:1px solid #111}.handwrite{display:grid!important;grid-template-columns:1fr 1fr!important;page-break-inside:avoid}#nurseBtn{display:none!important}}
+
 
 .pdf-action-card{
   display:flex;align-items:center;justify-content:space-between;gap:18px;
@@ -67,31 +67,7 @@ button:disabled{opacity:.42;cursor:not-allowed}.nurse-head{display:flex;justify-
   .pdf-primary{width:100%;margin-top:12px}
 }
 
-@media print{
-  @page{size:A4 portrait;margin:8mm}
-  body{background:#fff!important}
-  body > *{visibility:hidden!important}
-  #printSheet,#printSheet *{visibility:visible!important}
-  #printSheet{
-    display:block!important;position:absolute;left:0;top:0;width:100%;
-    color:#111;background:#fff;font-family:Arial,sans-serif;font-size:9.5pt
-  }
-  .ps-header{display:flex;justify-content:space-between;border-bottom:2px solid #0f172a;padding-bottom:5mm}
-  .ps-title{font-size:17pt;font-weight:900;color:#0f172a}
-  .ps-subtitle{font-size:9.5pt;font-weight:800;margin-top:1.5mm}
-  .ps-meta{text-align:right;font-size:8.5pt;line-height:1.45}
-  .ps-accept{margin-top:4mm;background:#b91c1c;color:#fff;padding:3mm 4mm;display:flex;justify-content:space-between;gap:5mm;font-size:9pt}
-  .ps-warning{margin-top:2.5mm;background:#fff7ed;border:1.5px solid #f59e0b;padding:3mm 4mm;font-size:8.5pt;line-height:1.35}
-  .ps-grid{display:grid;grid-template-columns:1fr 1fr;gap:3mm;margin-top:3mm}
-  .ps-box{border:1px solid #94a3b8;border-radius:2mm;padding:2.5mm;break-inside:avoid}
-  .ps-box h3{margin:0 0 1.7mm;font-size:9.5pt;color:#1e3a8a}
-  .ps-span{grid-column:1 / -1}
-  .ps-box table{width:100%;border-collapse:collapse;font-size:8.3pt}
-  .ps-box td{padding:1mm 0;vertical-align:top;border-bottom:.3px solid #e2e8f0}
-  .ps-box td:first-child{width:34%;font-weight:700;padding-right:2mm}
-  .ps-handwrite{display:grid;grid-template-columns:1fr 1fr;gap:4mm;margin-top:3mm;border:1.5px solid #64748b;padding:3mm;line-height:1.8;font-size:8.5pt;break-inside:avoid}
-  .ps-footer{display:flex;justify-content:space-between;border-top:1px solid #94a3b8;margin-top:3mm;padding-top:2mm;font-size:7.5pt}
-}
+
 
 .author-line{margin:9px 0 0;color:#e2e8f0;font-size:13px;line-height:1.45}
 .author-line strong{color:#fff;font-size:14px}
@@ -99,7 +75,7 @@ button:disabled{opacity:.42;cursor:not-allowed}.nurse-head{display:flex;justify-
 .references-list{margin:8px 0 0;padding-left:22px;font-size:13px;color:#334155}
 .references-list li{margin:9px 0;line-height:1.45}
 .reference-note{margin-top:14px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:10px;padding:12px;font-size:12px;color:#475569}
-@media print{.ps-author{font-size:8pt;margin-top:1.2mm;color:#334155}.ps-refline{font-size:6.8pt;line-height:1.25;margin-top:2.3mm;border-top:.5px solid #cbd5e1;padding-top:1.5mm}}
+
 
 #ecmoSummary{border-left:4px solid #2563eb}.ecmo-check span{display:block;margin-bottom:6px}
 .ecmo-banner{background:#eff6ff;border:1px solid #93c5fd;color:#1e3a8a;border-radius:10px;padding:11px 13px;font-weight:700}
@@ -128,9 +104,40 @@ button:disabled{opacity:.42;cursor:not-allowed}.nurse-head{display:flex;justify-
   .nurse-head{display:block}
   .nurse-primary{width:100%;margin-top:12px}
 }
-@media print{
-  .nursing-card-wrap{display:block!important;border:1px solid #0f766e!important;background:#fff!important}
-  .nurse-primary{display:none!important}
-}
+
 
 #effluentWrap small{display:block;margin-top:6px;color:#64748b;font-size:11px;line-height:1.35}
+
+.nursing-card-wrap{margin-top:18px;border:2px solid #0f766e;background:#f0fdfa;border-radius:14px;padding:16px}
+.nurse-head{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.nurse-primary{background:#0f766e;color:#fff;font-weight:900;padding:12px 16px;border-radius:10px}
+.nursing{white-space:pre-wrap}
+.print-sheet{display:none}
+
+@media print{
+  @page{size:A4 portrait;margin:7mm}
+  html,body{width:210mm!important;height:297mm!important;margin:0!important;padding:0!important;background:#fff!important}
+  body *{display:none!important}
+  #printSheet,#printSheet *{display:revert!important}
+  #printSheet{
+    position:absolute!important;left:0!important;top:0!important;
+    width:196mm!important;max-height:283mm!important;overflow:hidden!important;
+    margin:0!important;padding:0!important;color:#111!important;background:#fff!important;
+    font-family:Arial,sans-serif!important;font-size:8pt!important;line-height:1.2!important
+  }
+  .ps-header{display:flex!important;justify-content:space-between!important;border-bottom:1.5px solid #0f172a!important;padding-bottom:2.5mm!important}
+  .ps-title{font-size:14pt!important;font-weight:900!important}.ps-subtitle{font-size:8pt!important;font-weight:800!important}
+  .ps-author,.ps-meta{font-size:7pt!important}.ps-meta{text-align:right!important}
+  .ps-accept{display:flex!important;justify-content:space-between!important;background:#b91c1c!important;color:#fff!important;padding:2mm 2.5mm!important;margin-top:2mm!important;font-size:7.5pt!important}
+  .ps-warning{display:block!important;background:#fff7ed!important;border:1px solid #f59e0b!important;padding:2mm 2.5mm!important;margin-top:1.5mm!important;font-size:7pt!important}
+  .ps-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:2mm!important;margin-top:2mm!important}
+  .ps-box{display:block!important;border:1px solid #94a3b8!important;border-radius:1.5mm!important;padding:2mm!important;break-inside:avoid!important}
+  .ps-box h3{display:block!important;margin:0 0 1mm!important;font-size:8pt!important;color:#1e3a8a!important}
+  .ps-span{grid-column:1/-1!important}
+  .ps-box table{display:table!important;width:100%!important;border-collapse:collapse!important;font-size:7pt!important}
+  .ps-box tbody{display:table-row-group!important}.ps-box tr{display:table-row!important}.ps-box td{display:table-cell!important;padding:.65mm 0!important;vertical-align:top!important;border-bottom:.2px solid #e2e8f0!important}
+  .ps-box td:first-child{width:31%!important;font-weight:700!important;padding-right:1.5mm!important}
+  .ps-handwrite{display:grid!important;grid-template-columns:1fr 1fr!important;gap:3mm!important;margin-top:2mm!important;border:1px solid #64748b!important;padding:2mm!important;font-size:7pt!important;line-height:1.6!important;break-inside:avoid!important}
+  .ps-refline{display:block!important;font-size:6pt!important;line-height:1.15!important;margin-top:1.5mm!important;border-top:.5px solid #cbd5e1!important;padding-top:1mm!important}
+  .ps-footer{display:flex!important;justify-content:space-between!important;margin-top:1mm!important;border-top:.5px solid #94a3b8!important;padding-top:1mm!important;font-size:6pt!important}
+}
