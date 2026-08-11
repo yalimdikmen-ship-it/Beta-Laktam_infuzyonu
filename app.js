@@ -155,6 +155,44 @@ function updateRenal(){
 $("calcCrcl").addEventListener("click",cg);
 
 
+
+const STABILITY = {
+ piptazo:"Extended infusion sırasında yalnız kurumca valide edilmiş dilüent, konsantrasyon ve saklama koşullarını kullanın. Aminoglikozidlerle aynı torbada hazırlamayın.",
+ mero:"Meropenem çözeltide sıcaklık ve konsantrasyona duyarlıdır. Validasyonu olmayan 24 saatlik oda sıcaklığı continuous infusion kullanılmamalıdır; 3 saatlik EI pratik varsayılandır.",
+ cefepime:"Uzatılmış infüzyonda ürün/konsantrasyon stabilitesi ve Y-site uyumluluğu doğrulanmalıdır. Renal yetmezlikte nörotoksisite açısından yakın izlem gerekir.",
+ ceftazidime:"3 saatlik EI uygulanabilir; continuous infusion için stabilite, sıcaklık ve torba değişim süresi kurumca valide edilmelidir.",
+ cazavi:"Extended/continuous kullanım yalnız ürün ve kurum stabilite verileri doğrulanarak yapılmalıdır.",
+ ceftolo:"Extended/continuous kullanımda ürün stabilitesi ve yerel farmasi validasyonu gerekir.",
+ cefiderocol:"3 saatlik infüzyon standart uygulamadır; üretici hazırlama ve saklama talimatına uyun.",
+ merovab:"3 saatlik infüzyon standart uygulamadır; üretici hazırlama ve renal doz talimatına uyun."
+};
+function updateEcmoUI(){
+ const e=$("ecmo").value;
+ $("ecmoFlowWrap").classList.toggle("hidden",e==="none");
+ if(e==="none"){$("ecmoSummary").classList.add("hidden");return}
+ $("ecmoSummary").classList.remove("hidden");
+ const both=$("rrt").value!=="none";
+ $("ecmoSummary").innerHTML=`<div class="ecmo-banner">${e==="vv"?"VV-ECMO":"VA-ECMO"} aktif${both?" + renal replasman tedavisi":""}. ECMO tek başına otomatik doz azaltma nedeni değildir; renal klirens/RRT, MIC, enfeksiyon odağı ve mümkünse TDM birlikte değerlendirilmelidir.</div>`;
+}
+$("ecmo").addEventListener("change",updateEcmoUI);
+$("ecmoFlow").addEventListener("input",updateEcmoUI);
+$("rrt").addEventListener("change",updateEcmoUI);
+
+function ecmoAdvice(key, crcl, rrt){
+ const e=$("ecmo").value;
+ if(e==="none") return "ECMO yok. Renal fonksiyon/RRT ve enfeksiyon özelliklerine göre standart karar yolu kullanılır.";
+ let t=`${e==="vv"?"VV-ECMO":"VA-ECMO"} mevcut. ECMO varlığı tek başına beta-laktam dozunun azaltılması için yeterli değildir. `;
+ if(key==="mero"){
+   t+="2026 ASAP-ECMO verilerinde meropenem klirensini kreatinin klirensi ve eşzamanlı RRT belirgin etkilerken ECMO akımı santral dağılım hacmini etkiledi. Prolonged/continuous strateji ve mümkünse TDM düşünülmelidir.";
+ } else if(key==="cefepime"){
+   t+="Erişkin ECMO PK verilerinde 2 g q8h, 3 saat infüzyon normal/augmented renal klirens veya seçilmiş CVVHDF hastalarında hedef maruziyeti destekledi; nörotoksisite riski nedeniyle renal fonksiyon ve mümkünse TDM birlikte izlenmelidir.";
+ } else {
+   t+="Bu ilaç için ECMO-spesifik doz verisi sınırlıdır; standart ağır-hasta dozu renal fonksiyon/RRT temelinde seçilmeli, yüksek MIC/ARC durumunda prolonged infusion ve TDM düşünülmelidir.";
+ }
+ if(rrt!=="none") t+=" ECMO + RRT birlikte olduğundan RRT modalitesi/effluent ve rezidüel renal fonksiyon doz kararında özellikle önemlidir.";
+ return t;
+}
+
 let disclaimerAcceptedAt=null;
 function updateBMI(){const w=+$("weight").value,h=+$("height").value/100;if(w&&h)$("bmi").value=(w/(h*h)).toFixed(1)}
 ["weight","height"].forEach(x=>$(x).addEventListener("input",updateBMI)); updateBMI();
@@ -192,13 +230,16 @@ function generate(){
   $("infusion").textContent=d.infusion;
   $("pkpd").textContent=d.pkpd;
   $("prep").textContent=d.prep;
+  $("stability").textContent=STABILITY[key] || "İlaç-spesifik stabiliteyi güncel ürün bilgisi ve yerel eczane protokolüyle doğrulayın.";
+  $("extracorp").textContent=ecmoAdvice(key,crcl,rrt);
 
   let warnings=[...d.warnings];
   if(shock) warnings.unshift("Septik şok: terapötik konsantrasyona hızlı ulaşmak için ilk dozun geciktirilmemesi ve yükleme yaklaşımı önemlidir.");
   if(mic) warnings.push(`Girilen MIC: ${mic} mg/L. Hedef başarısı yalnız bu prototipten hesaplanamaz; breakpoint, serbest konsantrasyon ve TDM ile birlikte değerlendirin.`);
   if(crcl>=130 || $("arc").checked) warnings.push("ARC uyarısı aktif: standart idame maruziyeti yetersiz kalabilir.");
   if(aki) warnings.push("AKI aktif: renal fonksiyon dinamik olduğundan doz sık yeniden değerlendirilmelidir.");
-  if(rrt!=="none") warnings.push("RRT aktif: bu sürüm otomatik RRT dozu üretmez; effluent/rezidüel fonksiyon ve yerel tablo gerekir.");
+  if(rrt!=="none") warnings.push("RRT aktif: effluent/rezidüel renal fonksiyon ve yerel doz tablosu birlikte değerlendirilmelidir.");
+  if($("ecmo").value!=="none") warnings.push(ecmoAdvice(key,crcl,rrt));
 
   $("warnings").innerHTML="<ul>"+warnings.map(x=>`<li>${x}</li>`).join("")+"</ul>";
 
@@ -242,6 +283,8 @@ function fillPrintSheet(){
   $("psScr").textContent=($("scr").value||"—")+" mg/dL";
   $("psCrcl").textContent=($("crcl").value||"—")+" mL/dk";
   $("psRrt").textContent=rrtMap[$("rrt").value] || "—";
+  const e=$("ecmo").value, ef=$("ecmoFlow").value;
+  $("psEcmo").textContent=e==="none"?"Yok":`${e==="vv"?"VV-ECMO":"VA-ECMO"}${ef?" / "+ef+" L/dk":""}`;
   $("psSite").textContent=siteMap[$("site").value] || "—";
   $("psOrganism").textContent=$("organism").value || "Bilinmiyor";
   $("psMic").textContent=$("mic").value ? $("mic").value+" mg/L" : "Bilinmiyor";

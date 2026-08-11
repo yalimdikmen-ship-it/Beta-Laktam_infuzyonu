@@ -100,3 +100,6 @@ button:disabled{opacity:.42;cursor:not-allowed}.nurse-head{display:flex;justify-
 .references-list li{margin:9px 0;line-height:1.45}
 .reference-note{margin-top:14px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:10px;padding:12px;font-size:12px;color:#475569}
 @media print{.ps-author{font-size:8pt;margin-top:1.2mm;color:#334155}.ps-refline{font-size:6.8pt;line-height:1.25;margin-top:2.3mm;border-top:.5px solid #cbd5e1;padding-top:1.5mm}}
+
+#ecmoSummary{border-left:4px solid #2563eb}.ecmo-check span{display:block;margin-bottom:6px}
+.ecmo-banner{background:#eff6ff;border:1px solid #93c5fd;color:#1e3a8a;border-radius:10px;padding:11px 13px;font-weight:700}
