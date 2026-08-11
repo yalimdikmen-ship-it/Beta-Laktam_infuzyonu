@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="description" content="Erişkin yoğun bakım için beta-laktam uzatılmış infüzyon karar destek prototipi.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="stylesheet" href="./styles.css">
+  <title>β-Laktam ICU</title>
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <div class="eyebrow">ERİŞKİN YOĞUN BAKIM</div>
+    <h1>β-Laktam İnfüzyon Karar Desteği</h1>
+    <p class="subtitle">Extended / continuous infusion protokol prototipi • Offline PWA</p>
+  </div>
+  <span id="onlineBadge" class="badge">Bağlantı kontrol ediliyor</span>
+</header>
+
+<main class="container">
+  <section class="alert warning">
+    <strong>Klinik güvenlik notu:</strong>
+    Bu uygulama eğitim ve yerel protokol geliştirme amaçlı bir karar destek prototipidir; reçete yerine geçmez.
+    Renal replasman tedavisi, hızla değişen renal fonksiyon, yüksek MIC, obezite ve kritik PK değişkenlerinde
+    yerel eczane/enfeksiyon protokolü ve mümkünse TDM ile doğrulama gerekir.
+  </section>
+
+  <div class="grid two">
+    <section class="card">
+      <h2>1. Hasta ve renal durum</h2>
+      <div class="form-grid">
+        <label>Yaş
+          <input id="age" type="number" min="18" max="110" value="64">
+        </label>
+        <label>Cinsiyet
+          <select id="sex">
+            <option value="male">Erkek</option>
+            <option value="female">Kadın</option>
+          </select>
+        </label>
+        <label>Kilo (kg)
+          <input id="weight" type="number" min="30" max="300" step="0.1" value="80">
+        </label>
+        <label>Serum kreatinin (mg/dL)
+          <input id="scr" type="number" min="0.2" max="15" step="0.01" value="1.0">
+        </label>
+        <label>CrCl (mL/dk)
+          <input id="crcl" type="number" min="0" max="300" step="1" placeholder="Otomatik hesaplanabilir">
+        </label>
+        <label>Renal yöntem
+          <select id="rrt">
+            <option value="none">Yok</option>
+            <option value="crrt">CRRT</option>
+            <option value="ihd">Aralıklı hemodiyaliz</option>
+            <option value="sled">SLED / PIRRT</option>
+          </select>
+        </label>
+      </div>
+      <div class="button-row">
+        <button id="calcCrcl" class="secondary">Cockcroft–Gault hesapla</button>
+      </div>
+      <div class="checks">
+        <label><input id="shock" type="checkbox"> Septik şok / ağır sepsis</label>
+        <label><input id="aki" type="checkbox"> AKI / hızla değişen kreatinin</label>
+        <label><input id="arc" type="checkbox"> ARC şüphesi</label>
+      </div>
+      <div id="renalSummary" class="mini-result"></div>
+    </section>
+
+    <section class="card">
+      <h2>2. Antibiyotik ve enfeksiyon</h2>
+      <div class="form-grid">
+        <label>Antibiyotik
+          <select id="drug"></select>
+        </label>
+        <label>Enfeksiyon odağı
+          <select id="site">
+            <option value="sepsis">Sepsis / odağı belirsiz</option>
+            <option value="hap">HAP / VAP</option>
+            <option value="bsi">Bakteriyemi</option>
+            <option value="iai">İntraabdominal</option>
+            <option value="uti">Komplike üriner</option>
+            <option value="cns">SSS enfeksiyonu</option>
+            <option value="other">Diğer</option>
+          </select>
+        </label>
+        <label>Etken / açıklama
+          <input id="organism" type="text" placeholder="Örn. P. aeruginosa">
+        </label>
+        <label>MIC (mg/L)
+          <input id="mic" type="number" min="0" step="0.01" placeholder="Bilinmiyorsa boş bırakın">
+        </label>
+      </div>
+      <div class="button-row">
+        <button id="generate">Protokol oluştur</button>
+        <button id="reset" class="ghost">Temizle</button>
+      </div>
+    </section>
+  </div>
+
+  <section id="resultCard" class="card hidden">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">ÖNERİLEN PROTOKOL</div>
+        <h2 id="resultTitle"></h2>
+      </div>
+      <button id="printBtn" class="secondary">Yazdır / PDF</button>
+    </div>
+    <div id="riskBanner"></div>
+    <div class="result-grid">
+      <div class="metric"><span>Yükleme</span><strong id="loading"></strong></div>
+      <div class="metric"><span>İdame</span><strong id="maintenance"></strong></div>
+      <div class="metric"><span>İnfüzyon</span><strong id="infusion"></strong></div>
+      <div class="metric"><span>PK/PD hedefi</span><strong id="pkpd"></strong></div>
+    </div>
+    <div class="grid two">
+      <div>
+        <h3>Hazırlama / uygulama</h3>
+        <div id="prep" class="text-panel"></div>
+      </div>
+      <div>
+        <h3>Klinik uyarılar</h3>
+        <div id="warnings" class="text-panel"></div>
+      </div>
+    </div>
+    <h3>Hemşire uygulama özeti</h3>
+    <div id="nursing" class="nursing"></div>
+  </section>
+
+  <section class="card">
+    <h2>3. Aynı lümen / Y-site kontrolü</h2>
+    <p class="muted">Bu modül yalnızca prototip veri tabanındaki kritik eşleşmeleri tarar. “Veri yok” sonucu uyumluluk anlamına gelmez.</p>
+    <div class="compat-row">
+      <select id="compatDrug"></select>
+      <select id="coDrug">
+        <option value="">Birlikte verilen ilacı seçin</option>
+        <option>Amikasin</option>
+        <option>Gentamisin</option>
+        <option>Tobramisin</option>
+        <option>Vankomisin</option>
+        <option>Metronidazol</option>
+        <option>Aminofilin</option>
+        <option>Norepinefrin</option>
+        <option>Adrenalin</option>
+        <option>Dobutamin</option>
+        <option>Furosemid</option>
+        <option>Heparin</option>
+        <option>İnsülin</option>
+        <option>Propofol</option>
+        <option>Midazolam</option>
+        <option>TPN</option>
+      </select>
+      <button id="checkCompat" class="secondary">Kontrol et</button>
+    </div>
+    <div id="compatResult" class="mini-result"></div>
+  </section>
+
+  <section class="card compact">
+    <h2>Kaynak yaklaşımı ve sürüm</h2>
+    <p>
+      Sürüm <strong>0.1.0</strong>. Karar motoru yükleme dozunun geciktirilmemesi, β-laktamlarda zaman-bağımlı
+      PK/PD hedefleri ve ağır hastada prolonged infusion yaklaşımı üzerine kuruludur. İlaç stabilitesi ve Y-site
+      uyumluluğu ürün, konsantrasyon, dilüent, sıcaklık ve üreticiye bağlı olduğundan yerel eczane veri tabanı ile
+      doğrulanmalıdır.
+    </p>
+  </section>
+</main>
+
+<footer>
+  <span>Veriler bu prototipte sunucuya gönderilmez.</span>
+  <span id="installHint">Tarayıcı destekliyorsa “Ana Ekrana Ekle” ile kurulabilir.</span>
+</footer>
+
+<script src="./app.js"></script>
+</body>
+</html>
