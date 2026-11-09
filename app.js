@@ -396,3 +396,4 @@ window.addEventListener("online",updateOnline);window.addEventListener("offline"
 if("serviceWorker" in navigator){
   window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(console.error));
 }
+beta_app_js_sonuna_ekle.js
